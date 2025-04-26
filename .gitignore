@@ -2,3 +2,4 @@
 __pycache__/
 LabletAnomaly.egg-info/
 *.jpg
+datasets/
