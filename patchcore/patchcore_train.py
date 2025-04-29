@@ -230,8 +230,8 @@ import os
 class PDF(FPDF):
     def header(self):
         korean_font_path = '/usr/share/fonts/truetype/nanum/NanumGothic.ttf'
-        self.add_font('NanumGothic', '', korean_font_path)
-        self.add_font('NanumGothic', 'B', korean_font_path)
+        # self.add_font('NanumGothic', '', korean_font_path)
+        # self.add_font('NanumGothic', 'B', korean_font_path)
         self.set_font('NanumGothic', 'B', 16)
         self.cell(0, 10, 'PatchCore 사과 불량 검출 리포트', ln=True, align='C')
         self.ln(10)
