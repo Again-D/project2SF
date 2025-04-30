@@ -42,7 +42,7 @@ model_config = {
         "train_batch_size": 1,
         "test_batch_size": 1,
         "num_workers": 4,
-        "image_size": [256, 256],  # 학습/테스트 중 이미지 리사이즈 크기
+        "image_size": [100, 100],  # 학습/테스트 중 이미지 리사이즈 크기
         "transform_config": {
             "train": None,
             "eval": None,
@@ -64,7 +64,7 @@ model_config = {
         # callbacks, logger는 직접 객체로 전달해야 할 수도 있습니다.
         "callbacks": [], # 빈 리스트로 변경
         "logger": None, # None 유지 또는 실제 Logger 객체 전달
-        "default_root_dir": None, # 결과 저장 경로 설정 인자 (None이면 자동 생성)
+        "default_root_dir": "results", # 결과 저장 경로 설정 인자 (None이면 자동 생성)
         # 추가적인 Trainer 인자 필요 시 여기에 추가
     },
     "inference": {
@@ -81,26 +81,27 @@ model_config = {
 # FolderDataset 생성자 인자를 v2.0.0 문서에 맞게 확인하고 전달해야 합니다.
 # 아래는 예상되는 v2.0.0 FolderDataset 생성자 인자 전달 방식입니다.
 datamodule = FolderDataset(
+    name="apple",
     root=model_config["dataset"]["root"],
-    # normal_dir="train/good",  # 직접 경로 문자열 전달
-    # abnormal_dir="test/abnormal", # 직접 경로 문자열 전달
-    # test_dir="test/good",  # 직접 경로 문자열 전달
-    image_size=model_config["dataset"]["image_size"],
-    train_batch_size=model_config["dataset"]["train_batch_size"],
-    test_batch_size=model_config["dataset"]["test_batch_size"],
-    num_workers=model_config["dataset"]["num_workers"],
-    transform_config=model_config["dataset"]["transform_config"],
+    normal_dir="train/good",  # 직접 경로 문자열 전달
+    abnormal_dir="test/abnormal", # 직접 경로 문자열 전달
+    normal_test_dir="test/good",  # 직접 경로 문자열 전달
+    # image_size=model_config["dataset"]["image_size"],
+    # train_batch_size=model_config["dataset"]["train_batch_size"],
+    # test_batch_size=model_config["dataset"]["test_batch_size"],
+    # num_workers=model_config["dataset"]["num_workers"],
+    # transform_config=model_config["dataset"]["transform_config"],
     # v2.0.0 FolderDataset에 따라 mask_dir 인자를 추가해야 할 수 있습니다.
     # mask_dir=model_config["dataset"].get("mask_dir"), # .get()으로 안전하게 접근
     # mask_suffix=model_config["dataset"].get("mask_suffix"),
 )
-datamodule.setup()  # 데이터셋 로딩 및 분할 준비
+# datamodule.setup()  # 데이터셋 로딩 및 분할 준비
 
 # 모델 초기화
 # Patchcore 생성자 인자를 v2.0.0 문서에 맞게 확인하고 전달해야 합니다.
 # 아래는 예상되는 v2.0.0 Patchcore 생성자 인자 전달 방식입니다.
 model = Patchcore(
-    input_size=model_config["model"]["input_size"],
+    # input_size=model_config["model"]["input_size"],
     backbone=model_config["model"]["backbone"],
     pre_trained=model_config["model"]["pre_trained"],
     layers=model_config["model"]["layers"],
