@@ -5,6 +5,8 @@ import os
 # from anomalib.data import FolderDataModule # 직접 임포트 필요 없음
 from anomalib.data import get_datamodule # <-- get_datamodule 함수 임포트
 from anomalib.pre_processing import PreProcessor
+from anomalib.post_processing import PostProcessor
+from anomalib.utils.post_processing import  draw_boxes, add_normal_label, add_anomalous_label
 
 from anomalib.models import Patchcore
 from anomalib.engine import Engine
@@ -107,7 +109,23 @@ transform = T.Compose([
 ])
 pre_processor = PreProcessor(transform=transform)
 
-visualizer = ImageVisualizer()
+text_config= {
+        "font" : "NanumGothic.ttf",
+        "size" : 20,
+        "color" : "yellow",
+        "background" : (0, 0, 0, 200)
+    }
+visualizer = ImageVisualizer(
+    text_config=text_config,
+    field_size=(512, 512),
+    output_dir="./output/visualizations",
+    
+)
+
+post_processor = PostProcessor(
+    image_sensitivity=0.4,
+    pixel_sensitivity=0.4
+)
 
 # 2. 모델 인스턴스화 (이 부분은 이전과 동일하게 유지)
 try:
@@ -120,8 +138,11 @@ try:
         num_neighbors=model_config["model"]["num_neighbors"],
         pre_processor=pre_processor,
         visualizer=visualizer,
-        evaluator=evaluator,
+        post_processor=post_processor,
     )
+    print(model.pre_processor)
+    print(model.visualizer)
+    print(model.post_processor)
 except TypeError as e:
     print(f"\nPatchcore 모델 생성 중 오류 발생: {e}")
     exit()
@@ -235,14 +256,24 @@ try:
 
         print(f"\n'{NEW_IMAGE_PATH_NORMAL}' 추론 실행 중...")
         results_normal = inferencer.predict(image=NEW_IMAGE_PATH_NORMAL)
+        normal_img=cv2.imread(NEW_IMAGE_PATH_NORMAL)
         print(f"  이미지 이상 점수 (Inferencer): {results_normal.pred_score.item():.4f}")
-        print(f"  추론 결과 이미지가 '{model_config['inference']['save_path']}' 폴더에 저장되었습니다.")
+        save_path_normal = os.path.join(model_config['inference']['save_path'], "good")
+        os.makedirs(save_path_normal, exist_ok=True)
+        cv2.imwrite(f"{save_path_normal}/60_100_result Good.jpg",normal_img)
+        # print(f"  추론 결과 이미지가 '{model_config['inference']['save_path']}' 폴더에 저장되었습니다.")
+        print(f"  추론 결과 이미지가 '{save_path_normal}' 폴더에 저장되었습니다.")
 
 
         print(f"\n'{NEW_IMAGE_PATH_DEFECT}' 추론 실행 중...")
         results_defect = inferencer.predict(image=NEW_IMAGE_PATH_DEFECT)
+        defect_img=cv2.imread(NEW_IMAGE_PATH_DEFECT)
         print(f"  이미지 이상 점수 (Inferencer): {results_defect.pred_score.item():.4f}")
-        print(f"  추론 결과 이미지가 '{model_config['inference']['save_path']}' 폴더에 저장되었습니다.")
+        save_path_defect = os.path.join(model_config['inference']['save_path'], "abnormal")
+        os.makedirs(save_path_defect, exist_ok=True)
+        cv2.imwrite(f"{save_path_defect}/r0_11_100_result Defect.jpg",defect_img)
+        # print(f"  추론 결과 이미지가 '{model_config['inference']['save_path']}' 폴더에 저장되었습니다.")
+        print(f"  추론 결과 이미지가 '{save_path_defect}' 폴더에 저장되었습니다.")
 
     else:
          print("\n체크포인트 파일이 유효하지 않아 추론을 건너뜀.")

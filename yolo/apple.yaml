@@ -1,0 +1,21 @@
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: /home/ajw/projects/smartfactory/modeltraining/yolo/datasets/apple
+train: train/images
+val: valid/images
+test: # test images (optional)
+
+nc: 5
+# Classes
+names: 
+  0: Apple
+  1: Black Dot
+  2: Bruise
+  3: scratch
+  4: unriped
+
+roboflow:
+  workspace: projectapple
+  project: apple-iu1jk
+  version: 7
+  license: Public Domain
+  url: https://universe.roboflow.com/projectapple/apple-iu1jk/dataset/7
