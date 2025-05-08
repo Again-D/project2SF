@@ -4,18 +4,21 @@ train: train/images
 val: valid/images
 test: # test images (optional)
 
-nc: 5
+nc: 8
 # Classes
 names: 
   0: Apple
   1: Black Dot
   2: Bruise
-  3: scratch
-  4: unriped
+  3: dent
+  4: rotten
+  5: scratch
+  6: stem
+  7: unriped
 
 roboflow:
   workspace: projectapple
   project: apple-iu1jk
-  version: 7
+  version: 13
   license: Public Domain
-  url: https://universe.roboflow.com/projectapple/apple-iu1jk/dataset/7
+  url: https://universe.roboflow.com/projectapple/apple-iu1jk/dataset/13
